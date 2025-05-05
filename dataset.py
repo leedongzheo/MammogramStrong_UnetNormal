@@ -88,6 +88,7 @@ class SegmentationDataset(Dataset):
 			# apply the transformations to both image and its mask
 			image = self.transforms(image)
 			# mask = self.transforms(mask)
+			mask = cv2.resize(mask, (256, 256), interpolation=cv2.INTER_NEAREST)
 			mask = (mask > 127).astype("float32")
 			mask = torch.from_numpy(mask)
 			mask = mask.unsqueeze(0)    
