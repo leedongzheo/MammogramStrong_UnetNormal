@@ -92,8 +92,9 @@ class SegmentationDataset(Dataset):
 			mask = (mask > 127).astype("float32")
 			mask = torch.from_numpy(mask)
 			mask = mask.unsqueeze(0)    
+		return image, mask, imagePath
 		# return a tuple of the image and its mask
-		return (image, mask)
+		# return (image, mask)
 		 # Nếu có transform thì apply cả ảnh + mask
 	        
 # load the image and mask filepaths in a sorted manner
@@ -103,6 +104,8 @@ trainMasksPaths = sorted(list(paths.list_images(MASK_TRAIN_PATH)))
 validImagesPaths = sorted(list(paths.list_images(IMAGE_VALID_PATH)))
 validMasksPaths = sorted(list(paths.list_images(MASK_VALID_PATH)))
 
+testImagesPaths = sorted(list(paths.list_images(IMAGE_TEST_PATH)))
+testMasksPaths = sorted(list(paths.list_images(MASK_TEST_PATH)))
 # create the train and test datasets
 # trainDS = SegmentationDataset(imagePaths=trainImagesPaths, maskPaths=trainMasksPaths,
 # 	transforms=transforms)
@@ -110,14 +113,19 @@ validMasksPaths = sorted(list(paths.list_images(MASK_VALID_PATH)))
 #     transforms=transforms)
 trainDS = SegmentationDataset(trainImagesPaths, trainMasksPaths, transforms=transforms)
 validDS = SegmentationDataset(validImagesPaths, validMasksPaths, transforms=transforms)
-
-print(f"[INFO] found {len(trainDS)} examples in the training set...")
-print(f"[INFO] found {len(validDS)} examples in the valid set...")
+testDS = SegmentationDataset(imagePaths=testImagesPaths, maskPaths=testMasksPaths,
+    transforms=valid_transform)
+# print(f"[INFO] found {len(trainDS)} examples in the training set...")
+# print(f"[INFO] found {len(validDS)} examples in the valid set...")
+print(f"[INFO] found {len(testDS)} examples in the test set...")
 # create the training and test data loaders
 
-trainLoader = DataLoader(trainDS, shuffle=True,
-	batch_size=bach_size, pin_memory=PIN_MEMORY,
-	num_workers=4)
-validLoader = DataLoader(validDS, shuffle=False,
+# trainLoader = DataLoader(trainDS, shuffle=True,
+# 	batch_size=bach_size, pin_memory=PIN_MEMORY,
+# 	num_workers=4)
+# validLoader = DataLoader(validDS, shuffle=False,
+# 	batch_size=bach_size, pin_memory=PIN_MEMORY,
+# 	num_workers=4)
+testLoader = DataLoader(testDS, shuffle=False,
 	batch_size=bach_size, pin_memory=PIN_MEMORY,
 	num_workers=4)
