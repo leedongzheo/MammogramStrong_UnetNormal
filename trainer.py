@@ -17,6 +17,9 @@ class Trainer:
         self.train_ious, self.val_ious = [], []
         self.best_model, self.best_dice, self.best_epoch = None, 0.0, 0
         self.log_interval = 1  # Số bước để log
+        self.dice_list = []
+        self.iou_list = []
+        self.path_list = []
          # Khởi tạo CosineAnnealingLR scheduler
         # self.scheduler = CosineAnnealingLR(self.optimizer, T_max=T_max, eta_min=lr_min)
         # self.scheduler = MultiStepLR(optimizer, milestones=[20, 40, 60], gamma=0.1)
@@ -263,6 +266,44 @@ class Trainer:
             gc.collect()
 
         print(f"[INFO] Training completed in {time.time() - start_time:.2f}s")
+    
+    def evaluate(self, test_loader, checkpoint_path):
+        self.load_checkpoint(checkpoint_path)
+        self.model.eval()
+        test_dice_total = 0.0
+        test_iou_total = 0.0
+        # dice_list = []
+        # iou_list = []
+
+        with torch.no_grad():
+            test_loader_progress = tqdm(enumerate(test_loader), total=len(test_loader), desc="Testing")
+            for i, (images, masks, image_paths) in test_loader_progress:
+                images, masks = images.to(self.device), masks.to(self.device)
+                outputs = self.model(images)
+
+                # Lặp từng ảnh trong batch để tính riêng biệt
+                for j in range(images.size(0)):
+                    output = outputs[j].unsqueeze(0)
+                    mask = masks[j].unsqueeze(0)
+                    path = image_paths[j]
+
+                    dice = dice_coeff(output, mask)
+                    iou = iou_core(output, mask)
+
+                    self.dice_list.append(dice.item())
+                    self.iou_list.append(iou.item())
+                    self.path_list.append(path)
+
+                    test_loader_progress.set_postfix({'Image': i + 1, 'Dice': dice.item(), 'IoU': iou.item()})
+
+                    test_dice_total += dice.item()
+                    test_iou_total += iou.item()
+
+        num_samples = len(self.dice_list)
+        avg_dice = test_dice_total / num_samples
+        avg_iou = test_iou_total / num_samples
+        print(f"[TEST] Avg Dice: {avg_dice:.4f}, Avg IoU: {avg_iou:.4f}")
+        return avg_dice, avg_iou, self.dice_list, self.iou_list, self.path_list
 
     def get_metrics(self):
         return {
