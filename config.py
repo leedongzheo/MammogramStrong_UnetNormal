@@ -59,13 +59,16 @@ PIN_MEMORY = True if str(DEVICE) == "cuda:0" else False
 DATASET_PATH = args.data
 TRAIN_PATH = os.path.join(DATASET_PATH, "train")
 VALID_PATH = os.path.join(DATASET_PATH, "valid")
-
+TEST_PATH = os.path.join(DATASET_PATH, "test")
 # define the path to the images and masks dataset
 IMAGE_TRAIN_PATH = os.path.join(TRAIN_PATH, "images")
 MASK_TRAIN_PATH = os.path.join(TRAIN_PATH, "masks")
 
 IMAGE_VALID_PATH = os.path.join(VALID_PATH, "images")
 MASK_VALID_PATH = os.path.join(VALID_PATH, "masks")
+
+IMAGE_TEST_PATH = os.path.join(TEST_PATH, "images")
+MASK_TEST_PATH = os.path.join(TEST_PATH, "masks")
 
 BASE_OUTPUT = args.saveas if  args.saveas else "output"
 # Tham số của model
