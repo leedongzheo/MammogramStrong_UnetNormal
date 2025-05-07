@@ -138,3 +138,10 @@ def export(trainer):
 
     plt.show()
     plt.close()
+def export_evaluate(trainer):
+    df = pd.DataFrame({
+        'ImagePath': trainer.path_list,
+        'Dice': trainer.dice_list,
+        'IoU': trainer.iou_list
+    })
+    df.to_csv("test_metrics_with_paths.csv", index=False)
