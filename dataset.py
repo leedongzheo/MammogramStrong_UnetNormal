@@ -114,7 +114,7 @@ testMasksPaths = sorted(list(paths.list_images(MASK_TEST_PATH)))
 trainDS = SegmentationDataset(trainImagesPaths, trainMasksPaths, transforms=transforms)
 validDS = SegmentationDataset(validImagesPaths, validMasksPaths, transforms=transforms)
 testDS = SegmentationDataset(imagePaths=testImagesPaths, maskPaths=testMasksPaths,
-    transforms=valid_transform)
+    transforms=transforms)
 # print(f"[INFO] found {len(trainDS)} examples in the training set...")
 # print(f"[INFO] found {len(validDS)} examples in the valid set...")
 print(f"[INFO] found {len(testDS)} examples in the test set...")
