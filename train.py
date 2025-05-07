@@ -7,7 +7,7 @@ def get_args():
     parser = argparse.ArgumentParser(description="Train hoặc Pretrain một model AI")
     parser.add_argument("--epoch", type=int, required=True, help="Số epoch để train")
     # parser.add_argument("--model", type=str, required=True, help="Đường dẫn đến model")
-    parser.add_argument("--mode", type=str, choices=["train", "pretrain"], required=True, help="Chế độ: train hoặc pretrain")
+    parser.add_argument("--mode", type=str, choices=["train", "pretrain", "evaluate"], required=True, help="Chế độ: train hoặc pretrain hoặc evaluate")
     parser.add_argument("--data", type=str, required=True, help="Đường dẫn đến dataset đã giải nén")
     # Tham số trường hợp
     parser.add_argument("--checkpoint", type=str, help="Đường dẫn đến file checkpoint (chỉ dùng cho chế độ pretrain)")
@@ -36,7 +36,7 @@ def main():
     from model import Unet
     from model import unet_pyramid_cbam_gate
     import optimizer
-    from result import export
+    from result import export, export_evaluate
     global trainer
     SEED=42
     torch.manual_seed(SEED)
@@ -47,12 +47,18 @@ def main():
     if args.mode == "train":
         trainer.train(trainLoader, validLoader)
         export(trainer)
-    else:
+    elif args.mode == "pretrain":
         if not args.checkpoint:
             raise ValueError("Chế độ pretrain yêu cầu checkpoint!")
         trainer.pretrained(train_loader=trainLoader, val_loader=validLoader, checkpoint_path = args.checkpoint)
         # trainer.pretrained(trainLoader,validLoader,args.checkpoint)
         export(trainer)
+    else:
+        if not args.checkpoint:
+            raise ValueError("Chế độ pretrain yêu cầu checkpoint!")
+        trainer.evaluate(test_loader = testLoader, checkpoint_path = args.checkpoint)
+        # trainer.pretrained(trainLoader,validLoader,args.checkpoint)
+        export_evaluate(trainer)
 if __name__ == "__main__":
     args = get_args()
     main()
