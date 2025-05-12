@@ -267,7 +267,7 @@ class Trainer:
 
         print(f"[INFO] Training completed in {time.time() - start_time:.2f}s")
     
-    def evaluate(self, test_loader, checkpoint_path):
+    def evaluate(self, train_loader, val_loader, test_loader, checkpoint_path):
         self.load_checkpoint(checkpoint_path)
         self.model.eval()
         test_dice_total = 0.0
