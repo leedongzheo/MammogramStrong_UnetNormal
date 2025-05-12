@@ -115,17 +115,17 @@ trainDS = SegmentationDataset(trainImagesPaths, trainMasksPaths, transforms=tran
 validDS = SegmentationDataset(validImagesPaths, validMasksPaths, transforms=transforms)
 testDS = SegmentationDataset(imagePaths=testImagesPaths, maskPaths=testMasksPaths,
     transforms=transforms)
-# print(f"[INFO] found {len(trainDS)} examples in the training set...")
-# print(f"[INFO] found {len(validDS)} examples in the valid set...")
+print(f"[INFO] found {len(trainDS)} examples in the training set...")
+print(f"[INFO] found {len(validDS)} examples in the valid set...")
 print(f"[INFO] found {len(testDS)} examples in the test set...")
 # create the training and test data loaders
 
-# trainLoader = DataLoader(trainDS, shuffle=True,
-# 	batch_size=bach_size, pin_memory=PIN_MEMORY,
-# 	num_workers=4)
-# validLoader = DataLoader(validDS, shuffle=False,
-# 	batch_size=bach_size, pin_memory=PIN_MEMORY,
-# 	num_workers=4)
+trainLoader = DataLoader(trainDS, shuffle=True,
+	batch_size=bach_size, pin_memory=PIN_MEMORY,
+	num_workers=4)
+validLoader = DataLoader(validDS, shuffle=False,
+	batch_size=bach_size, pin_memory=PIN_MEMORY,
+	num_workers=4)
 testLoader = DataLoader(testDS, shuffle=False,
 	batch_size=bach_size, pin_memory=PIN_MEMORY,
 	num_workers=4)
