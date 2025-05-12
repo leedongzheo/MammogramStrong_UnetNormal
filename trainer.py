@@ -55,7 +55,7 @@ class Trainer:
         self.train_ious, self.val_ious = self.checkpoint['train_ious'], self.checkpoint['val_ious']
         self.best_dice, self.best_epoch = self.checkpoint['best_dice'], self.checkpoint['best_epoch']
 
-    def train(self, train_loader, val_loader):
+    def train(self, train_loader, val_loader, test_loader):
         print("lr0", lr0)
         print("bach_size", bach_size)
         print("weight_decay", weight_decay)
@@ -158,7 +158,7 @@ class Trainer:
 
         print(f"[INFO] Training completed in {time.time() - start_time:.2f}s")
 
-    def pretrained(self, train_loader, val_loader, testLoader, checkpoint_path):
+    def pretrained(self, train_loader, val_loader, test_loader, checkpoint_path):
         print("lr0",lr0)
         print("bach_size",bach_size)
         print("weight_decay",weight_decay)
