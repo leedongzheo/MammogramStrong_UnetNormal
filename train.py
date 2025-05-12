@@ -45,12 +45,12 @@ def main():
     optimizer1 = optimizer.optimizer(model = model1)
     trainer = Trainer(model = model1, optimizer = optimizer1)
     if args.mode == "train":
-        trainer.train(trainLoader, validLoader)
+        trainer.train(trainLoader, validLoader, testLoader)
         export(trainer)
     elif args.mode == "pretrain":
         if not args.checkpoint:
             raise ValueError("Chế độ pretrain yêu cầu checkpoint!")
-        trainer.pretrained(train_loader=trainLoader, val_loader=validLoader, checkpoint_path = args.checkpoint)
+        trainer.pretrained(train_loader=trainLoader, val_loader=validLoader, test_loader = testLoader, checkpoint_path = args.checkpoint)
         # trainer.pretrained(trainLoader,validLoader,args.checkpoint)
         export(trainer)
     else:
